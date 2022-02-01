@@ -44,12 +44,12 @@ export default class Bot extends Client {
       }
 
       // Looping over all files to load all commands
-      files.forEach((file) => {
+      asyncForEach(files, async (file) => {
         if (!file.endsWith('.js')) {
           return;
         }
 
-        const props = require(`./commands/${file}`);
+        const props = await import(`../commands/${file}`);
         const commandName = file.split('.')[0];
 
         console.log(`Reading command: ${commandName}`);
@@ -86,8 +86,9 @@ export default class Bot extends Client {
       if (err) {
         return console.error(err);
       }
-      return files.forEach((file) => {
-        const event = require(`./events/${file}`);
+
+      return asyncForEach(files, async (file) => {
+        const event = await import(`../commands/${file}`);
         this.on(file.split('.')[0], event);
       });
     });
