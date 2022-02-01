@@ -1,16 +1,17 @@
-/* eslint-disable global-require */
-/* eslint-disable import/no-dynamic-require */
 import { Client } from 'discord.js';
 import Keyv from 'keyv';
 import { readdir } from 'fs';
 import config from '../../config';
 import { asyncForEach } from '../utils';
+import NASA from './NASA';
 
 export default class Bot extends Client {
   constructor(opts) {
     super(opts);
+
     this.config = config;
     this.commands = new Keyv({ namespace: 'commands' });
+    this.NASA = new NASA();
   }
 
   /**
@@ -72,7 +73,7 @@ export default class Bot extends Client {
       this.application.commands.create(cmd.data)
         .then(async (slashCommand) => {
           console.log(`Loading command: ${slashCommand.name}`);
-          await slashCommand.permissions.add(cmd.conf);
+          await slashCommand.permissions.add(cmd.data.permissions);
         }).catch(console.error);
     });
   }
@@ -94,7 +95,7 @@ export default class Bot extends Client {
 
   start() {
     this._initBaseEvents();
-    this._initCommands();
     this._smartLogin();
+    this._initCommands();
   }
 }
