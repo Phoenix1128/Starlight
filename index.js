@@ -1,3 +1,3 @@
-import client from './src/client';
+import client from './src/client.js';
 
 client.start();

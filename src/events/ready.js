@@ -1,13 +1,11 @@
-import client from '../client';
-
-export default async () => {
+export default async (client) => {
   if (!client.application.owner) {
     await client.application.fetch();
   }
 
   setInterval(() => {
     try {
-      client.user.setActivity(`the stars with ${client.guilds.cache.size} servers!`, { type: 'WATCHING' });
+      client.user.setActivity(`NEOs with ${client.guilds.cache.size} servers!`, { type: 'WATCHING' });
     } catch (e) {
       // Don't need any handling
     }

@@ -1,19 +1,12 @@
-import client from '../client';
+import client from '../client.js';
 
 export const data = {
   name: 'ping',
   description: 'Pings the client.',
-  defaultPermission: false,
-  permissions: [
-    {
-      id: client.config.ownerId,
-      type: 'USER',
-      permission: true,
-    },
-  ],
+  permissions: [],
 };
 
 export async function run(interaction) {
-  const m = await interaction.reply('Pinging the Client...');
+  const m = await interaction.reply({ content: 'Pinging the Client...', fetchReply: true });
   interaction.editReply(`Pong! Latency: **${m.createdTimestamp - interaction.createdTimestamp}ms** \nAPI Latency: **${Math.round(client.ws.ping)}ms**`);
 }

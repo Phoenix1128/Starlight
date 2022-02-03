@@ -1,4 +1,5 @@
-import client from '../client';
+import { MessageEmbed } from 'discord.js';
+import client from '../client.js';
 
 export const data = {
   name: 'apod',
@@ -7,5 +8,14 @@ export const data = {
 };
 
 export async function run(interaction) {
-  client.NASA.apod();
+  const {
+    title, explanation, date, hdurl,
+  } = await client.NASA.apod();
+
+  const embed = new MessageEmbed()
+    .setTimestamp()
+    .setTitle(`${title} - ${date}`)
+    .setDescription(explanation)
+    .setImage(hdurl);
+  interaction.reply({ embeds: [embed] });
 }

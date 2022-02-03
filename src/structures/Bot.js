@@ -1,16 +1,16 @@
 import { Client } from 'discord.js';
-import Keyv from 'keyv';
+import Enmap from 'enmap';
 import { readdir } from 'fs';
-import config from '../../config';
-import { asyncForEach } from '../utils';
-import NASA from './NASA';
+import config from '../../config.js';
+import { asyncForEach } from '../utils.js';
+import NASA from './NASA.js';
 
 export default class Bot extends Client {
   constructor(opts) {
     super(opts);
 
     this.config = config;
-    this.commands = new Keyv({ namespace: 'commands' });
+    this.commands = new Enmap();
     this.NASA = new NASA();
   }
 
@@ -18,8 +18,12 @@ export default class Bot extends Client {
    * @private
    */
   _smartLogin() {
-    this.login(config.token).then(() => {
+    this._initBaseEvents();
+    this.login(config.token).then(async () => {
       console.log('Bot successfully logged in.');
+
+      await this.application.fetch();
+      this._initCommands();
     }).catch(() => {
       console.log('Retrying login...');
       let counter = 1;
@@ -38,65 +42,63 @@ export default class Bot extends Client {
    * @private
    */
   _initCommands() {
-    readdir('./commands/', (err, files) => {
+    readdir('./src/commands/', (err, files) => {
       if (err) {
         return console.error(err);
       }
 
       // Looping over all files to load all commands
-      asyncForEach(files, async (file) => {
+      return asyncForEach(files, async (file, i) => {
         if (!file.endsWith('.js')) {
           return;
         }
 
-        const props = await import(`../commands/${file}`);
+        const { data, run } = await import(`../commands/${file}`);
         const commandName = file.split('.')[0];
 
         console.log(`Reading command: ${commandName}`);
-        this.commands.set(commandName, props);
+        this.commands.set(commandName, { data, run });
+
+        await this._loadSlashCommand(commandName);
+
+        if (i === files.length - 1) {
+          console.log('Successfully read and loaded all commands.');
+        }
       });
-
-      console.log('Successfully read all commands.');
-
-      this._loadSlashCommands();
-      return console.log('Successfully loaded all commands.');
     });
   }
 
   /**
    * @private
    */
-  _loadSlashCommands() {
-    const commandsArr = this.commands.keyArray();
-    asyncForEach(commandsArr, async (command) => {
-      const cmd = this.slashCommands.get(command);
-      this.application.commands.create(cmd.data)
-        .then(async (slashCommand) => {
-          console.log(`Loading command: ${slashCommand.name}`);
-          await slashCommand.permissions.add(cmd.data.permissions);
-        }).catch(console.error);
-    });
+  async _loadSlashCommand(commandName) {
+    const cmd = this.commands.get(commandName);
+    await this.application.commands.create(cmd.data);
+    console.log(`Loading command: ${commandName}`);
   }
 
   /**
    * @private
    */
   _initBaseEvents() {
-    readdir('./events', (err, files) => {
+    readdir('./src/events/', (err, files) => {
       if (err) {
         return console.error(err);
       }
 
-      return asyncForEach(files, async (file) => {
-        const event = await import(`../commands/${file}`);
+      return asyncForEach(files, async (file, i) => {
+        const { default: event } = await import(`../events/${file}`);
+        console.log(`Reading event: ${file}`);
         this.on(file.split('.')[0], event);
+
+        if (i === files.length - 1) {
+          console.log('Successfully read all events.');
+        }
       });
     });
   }
 
   start() {
-    this._initBaseEvents();
     this._smartLogin();
-    this._initCommands();
   }
 }

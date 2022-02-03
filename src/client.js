@@ -1,5 +1,5 @@
 import { Options, Intents } from 'discord.js';
-import Bot from './structures/Bot';
+import Bot from './structures/Bot.js';
 
 const client = new Bot({
   makeCache: Options.cacheWithLimits({
@@ -11,9 +11,7 @@ const client = new Bot({
   },
   intents: [
     Intents.FLAGS.GUILDS,
-    Intents.FLAGS.GUILD_MEMBERS,
     Intents.FLAGS.GUILD_MESSAGES,
-    Intents.FLAGS.GUILD_MESSAGE_REACTIONS,
   ],
 });
 

@@ -22,6 +22,7 @@
         "no-cond-assign": ["error", "except-parens"],
         "no-useless-escape": "off",
         "max-len": "off",
-        "no-underscore-dangle": ["error", {"enforceInMethodNames": false, "allowAfterThis": true }]
+        "no-underscore-dangle": ["error", {"enforceInMethodNames": false, "allowAfterThis": true }],
+        "import/extensions": ["error", "always"]
     }
 }

@@ -1,6 +1,6 @@
 /* eslint-disable no-param-reassign */
 import Discord from 'discord.js';
-import { checkMark, redX } from './emoji';
+import { checkMark, redX } from './emoji.js';
 
 /**
  *
