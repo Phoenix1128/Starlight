@@ -39,9 +39,8 @@ export const clean = async (text) => {
 
 /**
  *
- * @param {Discord.Interaction}
- * @param {String} type 0 (error) OR 1 (success)
- * @param {Discord.TextChannel|String} channel
+ * @param {Discord.Interaction} interaction
+ * @param {Number} type 0 (error) OR 1 (success)
  * @param {String} header
  * @param {String} msg
  * @param {boolean} followUp whether to followUp on another reply
@@ -63,7 +62,7 @@ export const sendCustomMsg = async (interaction, type, header, msg, followUp = f
 
 /**
  *
- * @param {Discord.Interaction}
+ * @param {Discord.Interaction} interaction
  * @param {String} message
  * @returns {undefined}
  */
