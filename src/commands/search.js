@@ -33,7 +33,6 @@ export async function run(interaction) {
 
   const totalPages = Math.ceil(mappedItems.length / 5);
   let currPage = 1;
-
   let end = false;
 
   // eslint-disable-next-line consistent-return
@@ -42,6 +41,9 @@ export async function run(interaction) {
     const updatedFields = mappedItems.slice(startingIndex, startingIndex + 5);
 
     embed.setFields(updatedFields)
+      .setTitle('')
+      .setDescription('')
+      .setImage('')
       .setAuthor({ name: `Page ${currPage} of ${totalPages}` });
 
     const buttonActionRow = new MessageActionRow()
@@ -123,22 +125,26 @@ export async function run(interaction) {
             .setCustomId('Back'),
         ]);
 
-      embed.setTitle(mappedItems[selectedInteraction.values[0]].name)
-        .setDescription(mappedItems[selectedInteraction.values[0]].value)
+      const resultIndex = selectedInteraction.values[0];
+
+      embed.setTitle(mappedItems[resultIndex].name)
+        .setDescription(mappedItems[resultIndex].value)
         .setFields([])
         .setAuthor({ name: '' });
 
-      const resultResponse = await interaction.editReply({ embeds: [embed], components: [updatedButtonActionRow], fetchReply: true });
-
-      let backButtonSelected;
-      try {
-        backButtonSelected = await resultResponse.awaitMessageComponent({ filter, time: 1200000 });
-      } catch (err) {
-        return sendCustomMsg(interaction, 0, 'Time Expired!', err);
+      if (items[resultIndex].data[0].media_type === 'image') {
+        embed.setImage(items[resultIndex].links[0].href);
+      } else {
+        embed.addField('Links', (items[resultIndex].links && items[resultIndex].links.length > 0) ? items[resultIndex].links.map((link) => link.href).join('\n') : 'No Links');
       }
 
-      if (backButtonSelected) {
+      const resultResponse = await interaction.editReply({ embeds: [embed], components: [updatedButtonActionRow], fetchReply: true });
+
+      try {
+        await resultResponse.awaitMessageComponent({ filter, time: 1200000 });
         await updateEmbed();
+      } catch (err) {
+        return sendCustomMsg(interaction, 0, 'Time Expired!', err);
       }
     } else {
       currPage = selectedInteraction.customId === 'next' ? currPage += 1 : currPage -= 1;
