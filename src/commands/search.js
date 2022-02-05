@@ -2,12 +2,12 @@ import {
   MessageEmbed, MessageActionRow, MessageButton, MessageSelectMenu,
 } from 'discord.js';
 import client from '../client.js';
-import { arrowBack, arrowForward } from '../emoji.js';
+import { arrowBack, arrowForward, redX } from '../emoji.js';
 import { sendCustomMsg } from '../utils.js';
 
 export const data = {
   name: 'search',
-  description: "Search's NASA's Images and Videos library (https://images.nasa.gov) for the given query.",
+  description: "Searches NASA's Image and Video library (https://images.nasa.gov) for the given query.",
   options: [
     {
       name: 'query',
@@ -49,16 +49,19 @@ export async function run(interaction) {
     const buttonActionRow = new MessageActionRow()
       .addComponents([
         new MessageButton()
-          .setLabel(`${arrowBack} Previous`)
+          .setLabel('Previous')
+          .setEmoji(arrowBack)
           .setCustomId('previous')
           .setStyle('PRIMARY')
           .setDisabled(currPage === 1),
         new MessageButton()
-          .setLabel(`Next ${arrowForward}`)
+          .setLabel('Next')
+          .setEmoji(arrowForward)
           .setCustomId('next')
           .setStyle('PRIMARY'),
         new MessageButton()
           .setLabel('End Search')
+          .setEmoji(redX)
           .setCustomId('end')
           .setStyle('DANGER'),
       ]);
@@ -70,27 +73,27 @@ export async function run(interaction) {
           .setPlaceholder('Nothing Selected')
           .addOptions([
             {
-              label: updatedFields[0].name,
+              label: updatedFields[0].name.length > 100 ? `${updatedFields[0].name.slice(0, 96)}...` : updatedFields[0].name,
               description: `Result ${startingIndex + 1}`,
               value: startingIndex.toString(),
             },
             {
-              label: updatedFields[1].name,
+              label: updatedFields[1].name.length > 100 ? `${updatedFields[1].name.slice(0, 96)}...` : updatedFields[1].name,
               description: `Result ${startingIndex + 2}`,
               value: (startingIndex + 1).toString(),
             },
             {
-              label: updatedFields[2].name,
+              label: updatedFields[2].name.length > 100 ? `${updatedFields[2].name.slice(0, 96)}...` : updatedFields[2].name,
               description: `Result ${startingIndex + 3}`,
               value: (startingIndex + 2).toString(),
             },
             {
-              label: updatedFields[3].name,
+              label: updatedFields[3].name.length > 100 ? `${updatedFields[3].name.slice(0, 96)}...` : updatedFields[3].name,
               description: `Result ${startingIndex + 4}`,
               value: (startingIndex + 3).toString(),
             },
             {
-              label: updatedFields[4].name,
+              label: updatedFields[4].name.length > 100 ? `${updatedFields[4].name.slice(0, 96)}...` : updatedFields[4].name,
               description: `Result ${startingIndex + 5}`,
               value: (startingIndex + 4).toString(),
             },
@@ -120,7 +123,8 @@ export async function run(interaction) {
       const updatedButtonActionRow = new MessageActionRow()
         .addComponents([
           new MessageButton()
-            .setLabel(`${arrowBack} Back`)
+            .setLabel('Back')
+            .setEmoji(arrowBack)
             .setStyle('PRIMARY')
             .setCustomId('Back'),
         ]);
@@ -142,10 +146,11 @@ export async function run(interaction) {
 
       try {
         await resultResponse.awaitMessageComponent({ filter, time: 1200000 });
-        await updateEmbed();
       } catch (err) {
         return sendCustomMsg(interaction, 0, 'Time Expired!', err);
       }
+
+      await updateEmbed();
     } else {
       currPage = selectedInteraction.customId === 'next' ? currPage += 1 : currPage -= 1;
     }
