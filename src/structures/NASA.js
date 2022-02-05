@@ -22,4 +22,15 @@ export default class NASA {
       title: data.title, explanation: data.explanation, date, hdurl: data.hdurl,
     };
   }
+
+  /**
+   *
+   * @param {String} query The query to use when searching through the library
+   * @returns {Object}
+   */
+  // eslint-disable-next-line class-methods-use-this
+  async searchImageLibrary(query) {
+    const { data } = await axios.get(`https://images-api.nasa.gov/search?q=${query}`);
+    return data.collection;
+  }
 }
