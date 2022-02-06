@@ -1,6 +1,5 @@
 {
     "env": {
-        "commonjs": true,
         "es6": true,
         "node": true
     },
@@ -12,7 +11,8 @@
         "SharedArrayBuffer": "readonly"
     },
     "parserOptions": {
-        "ecmaVersion": 2018
+        "ecmaVersion": "latest",
+        "sourceType": "module"
     },
     "rules": {
         "linebreak-style": ["error", "windows"],
@@ -21,6 +21,8 @@
         "no-param-reassign": ["error", { "props": false }],
         "no-cond-assign": ["error", "except-parens"],
         "no-useless-escape": "off",
-        "max-len": "off"
+        "max-len": "off",
+        "no-underscore-dangle": ["error", {"enforceInMethodNames": false, "allowAfterThis": true }],
+        "import/extensions": ["error", "always"]
     }
 }
