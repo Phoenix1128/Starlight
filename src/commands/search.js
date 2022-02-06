@@ -19,11 +19,15 @@ export const data = {
   permissions: [],
 };
 
+// eslint-disable-next-line consistent-return
 export async function run(interaction) {
   const query = interaction.options.getString('query', true);
 
   const { items, metadata } = await client.NASA.searchImageLibrary(query);
-  items.length = items.length > 50 ? 50 : items.length;
+
+  if (items.length === 0) {
+    return sendCustomMsg(interaction, 0, 'No Results!', 'That query returned no results! Please try again!');
+  }
 
   const mappedItems = items.map((v) => ({ name: v.data[0].title, value: v.data[0].description.length > 1024 ? `${v.data[0].description.slice(0, 1020)}...` : v.data[0].description }));
 
@@ -58,7 +62,8 @@ export async function run(interaction) {
           .setLabel('Next')
           .setEmoji(arrowForward)
           .setCustomId('next')
-          .setStyle('PRIMARY'),
+          .setStyle('PRIMARY')
+          .setDisabled(currPage === totalPages),
         new MessageButton()
           .setLabel('End Search')
           .setEmoji(redX)
