@@ -71,38 +71,19 @@ export async function run(interaction) {
           .setStyle('DANGER'),
       ]);
 
+    const optionsToAdd = updatedFields.map((field, i) => (
+      {
+        label: field.name.length > 100 ? `${field.name.slice(0, 96)}...` : field.name,
+        description: `Result ${startingIndex + (i + 1)}`,
+        value: (startingIndex + i).toString(),
+      }));
+
     const selectMenuActionRow = new MessageActionRow()
       .addComponents([
         new MessageSelectMenu()
           .setCustomId('resultToExpand')
           .setPlaceholder('Nothing Selected')
-          .addOptions([
-            {
-              label: updatedFields[0].name.length > 100 ? `${updatedFields[0].name.slice(0, 96)}...` : updatedFields[0].name,
-              description: `Result ${startingIndex + 1}`,
-              value: startingIndex.toString(),
-            },
-            {
-              label: updatedFields[1].name.length > 100 ? `${updatedFields[1].name.slice(0, 96)}...` : updatedFields[1].name,
-              description: `Result ${startingIndex + 2}`,
-              value: (startingIndex + 1).toString(),
-            },
-            {
-              label: updatedFields[2].name.length > 100 ? `${updatedFields[2].name.slice(0, 96)}...` : updatedFields[2].name,
-              description: `Result ${startingIndex + 3}`,
-              value: (startingIndex + 2).toString(),
-            },
-            {
-              label: updatedFields[3].name.length > 100 ? `${updatedFields[3].name.slice(0, 96)}...` : updatedFields[3].name,
-              description: `Result ${startingIndex + 4}`,
-              value: (startingIndex + 3).toString(),
-            },
-            {
-              label: updatedFields[4].name.length > 100 ? `${updatedFields[4].name.slice(0, 96)}...` : updatedFields[4].name,
-              description: `Result ${startingIndex + 5}`,
-              value: (startingIndex + 4).toString(),
-            },
-          ]),
+          .addOptions(optionsToAdd),
       ]);
 
     const interactionResponse = interaction.replied ? await interaction.editReply({ embeds: [embed], components: [buttonActionRow, selectMenuActionRow], fetchReply: true }) : await interaction.reply({ embeds: [embed], components: [buttonActionRow, selectMenuActionRow], fetchReply: true });
