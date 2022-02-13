@@ -48,7 +48,9 @@ export const clean = async (text) => {
  * @returns {undefined}
  */
 export const sendCustomMsg = async (interaction, type, header, msg, followUp = false, ephemeral = false) => {
-  const options = { content: `${type === 1 ? checkMark : redX} **${header}**\n${msg}`, ephemeral };
+  const options = {
+    content: `${type === 1 ? checkMark : redX} **${header}**\n${msg}`, ephemeral, embeds: [], components: [],
+  };
   if (interaction.replied) {
     if (followUp) {
       await interaction.followUp(options);

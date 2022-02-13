@@ -71,18 +71,17 @@ export async function run(interaction) {
           .setStyle('DANGER'),
       ]);
 
-    const optionsToAdd = updatedFields.map((field, i) => (
-      {
-        label: field.name.length > 100 ? `${field.name.slice(0, 96)}...` : field.name,
-        description: `Result ${startingIndex + (i + 1)}`,
-        value: (startingIndex + i).toString(),
-      }));
+    const optionsToAdd = updatedFields.map((field, i) => ({
+      label: field.name.length > 100 ? `${field.name.slice(0, 96)}...` : field.name,
+      description: `Result ${startingIndex + (i + 1)}`,
+      value: (startingIndex + i).toString(),
+    }));
 
     const selectMenuActionRow = new MessageActionRow()
       .addComponents([
         new MessageSelectMenu()
           .setCustomId('resultToExpand')
-          .setPlaceholder('Nothing Selected')
+          .setPlaceholder('Select to expand a result')
           .addOptions(optionsToAdd),
       ]);
 
@@ -95,9 +94,9 @@ export async function run(interaction) {
 
     let selectedInteraction;
     try {
-      selectedInteraction = await interactionResponse.awaitMessageComponent({ filter, time: 1200000 });
+      selectedInteraction = await interactionResponse.awaitMessageComponent({ filter, time: 600000 });
     } catch (err) {
-      return sendCustomMsg(interaction, 0, 'Time Expired!', err);
+      return sendCustomMsg(interaction, 0, 'Time Expired!', 'Time expired for your search! Please rerun the command if you want to search again!');
     }
 
     if (selectedInteraction.customId === 'end') {
@@ -131,7 +130,7 @@ export async function run(interaction) {
       const resultResponse = await interaction.editReply({ embeds: [embed], components: [updatedButtonActionRow], fetchReply: true });
 
       try {
-        await resultResponse.awaitMessageComponent({ filter, time: 1200000 });
+        await resultResponse.awaitMessageComponent({ filter, time: 600000 });
       } catch (err) {
         return sendCustomMsg(interaction, 0, 'Time Expired!', err);
       }
