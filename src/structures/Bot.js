@@ -1,6 +1,7 @@
 import { Client } from 'discord.js';
 import Enmap from 'enmap';
 import { readdir } from 'fs';
+import { AutoPoster } from 'topgg-autoposter';
 import config from '../../config.js';
 import { asyncForEach } from '../utils.js';
 import NASA from './NASA.js';
@@ -12,6 +13,8 @@ export default class Bot extends Client {
     this.config = config;
     this.commands = new Enmap();
     this.NASA = new NASA();
+
+    this.topggAutoPoster = AutoPoster(config.topggApiKey, this);
   }
 
   /**
