@@ -1,10 +1,12 @@
 import axios from 'axios';
 import moment from 'moment';
-import config from '../../config.js';
 
 export default class NASA {
-  constructor() {
-    this.NasaApiKey = config.NasaApiKey;
+  /**
+ * @param {String} apiKey The NASA API Key to use
+ */
+  constructor(apiKey) {
+    this.apiKey = apiKey;
   }
 
   /**
@@ -17,7 +19,7 @@ export default class NASA {
       throw new Error(`Invalid Date provided to APOD! Provided: ${date}`);
     }
 
-    const { data } = await axios.get(`https://api.nasa.gov/planetary/apod?api_key=${this.NasaApiKey}&date=${date}`);
+    const { data } = await axios.get(`https://api.nasa.gov/planetary/apod?api_key=${this.apiKey}&date=${date}`);
     return {
       title: data.title, explanation: data.explanation, date, hdurl: data.hdurl,
     };
