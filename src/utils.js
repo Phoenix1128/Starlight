@@ -1,5 +1,6 @@
 /* eslint-disable no-param-reassign */
 import Discord from 'discord.js';
+import { inspect } from 'util';
 import { checkMark, redX } from './emoji.js';
 
 /**
@@ -25,14 +26,12 @@ export const clean = async (text) => {
     text = await text;
   }
   if (typeof text !== 'string') {
-    // eslint-disable-next-line global-require
-    text = require('util').inspect(text, { depth: 1 });
+    text = inspect(text, { depth: 1 });
   }
 
   text = text
     .replace(/`/g, `\`${String.fromCharCode(8203)}`)
-    .replace(/@/g, `@${String.fromCharCode(8203)}`)
-    .replace(this.config.token, 'mfa.VkO_2G4Qv3T--NO--lWetW_tjND--TOKEN--QFTm6YGtzq9PH--4U--tG0');
+    .replace(/@/g, `@${String.fromCharCode(8203)}`);
 
   return text;
 };
@@ -77,4 +76,21 @@ export const sendLongMessage = (interaction, message) => {
       await interaction.followUp(msgToSend);
     }
   });
+};
+
+/**
+ *
+ * @param {*} code
+ * @returns {Object} response, responseCode
+ */
+export const executeEval = async (client, code) => {
+  try {
+    // eslint-disable-next-line no-eval
+    const evaled = await eval(`(async () => {${code}})()`);
+    const cleanedResponse = await clean(evaled);
+    return { response: cleanedResponse, responseCode: 1 };
+  } catch (err) {
+    const cleanedError = await clean(err);
+    return { response: cleanedError, responseCode: 0 };
+  }
 };
