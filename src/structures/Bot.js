@@ -12,7 +12,7 @@ export default class Bot extends Client {
 
     this.config = config;
     this.commands = new Enmap();
-    this.NASA = new NASA();
+    this.NASA = new NASA(config.NasaApiKey);
 
     this.topggAutoPoster = AutoPoster(config.topggApiKey, this);
   }
