@@ -7,7 +7,7 @@ export default async (guild) => {
   const embed = new MessageEmbed()
     .setColor('#f10e0e')
     .setTitle('Removed from Guild...')
-    .setDescription(`Name: ${guild.name} (${guild.id})\nMember Count: ${guild.memberCount}\n\nTotal Guilds: ${await client.guilds.fetch()}`);
+    .setDescription(`Name: ${guild.name} (${guild.id})\nMember Count: ${guild.memberCount}\n\nTotal Guilds: ${(await client.guilds.fetch()).size}`);
 
   starlightChannel.send({ embeds: [embed] });
 };

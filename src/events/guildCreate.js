@@ -7,7 +7,7 @@ export default async (guild) => {
   const embed = new MessageEmbed()
     .setColor('#0B3D91')
     .setTitle('New Guild!')
-    .setDescription(`Name: ${guild.name} (${guild.id})\nMember Count: ${guild.memberCount}\n\nTotal Guilds: ${await client.guilds.fetch()}`);
+    .setDescription(`Name: ${guild.name} (${guild.id})\nMember Count: ${guild.memberCount}\n\nTotal Guilds: ${(await client.guilds.fetch()).size}`);
 
   starlightChannel.send({ embeds: [embed] });
 };

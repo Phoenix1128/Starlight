@@ -1,7 +1,17 @@
 /* eslint-disable no-param-reassign */
 import Discord from 'discord.js';
 import { inspect } from 'util';
-import { checkMark, redX } from './emoji.js';
+
+export const emoji = {
+  checkMark: '✅',
+  redX: '❌',
+  warning: '⚠',
+  thumbsUp: '👍',
+  thumbsDown: '👎',
+  neutral: '↔️',
+  arrowBack: '◀️',
+  arrowForward: '▶️',
+};
 
 /**
  *
@@ -48,7 +58,7 @@ export const clean = async (text) => {
  */
 export const sendCustomMsg = async (interaction, type, header, msg, followUp = false, ephemeral = false) => {
   const options = {
-    content: `${type === 1 ? checkMark : redX} **${header}**\n${msg}`, ephemeral, embeds: [], components: [],
+    content: `${type === 1 ? emoji.checkMark : emoji.redX} **${header}**\n${msg}`, ephemeral, embeds: [], components: [],
   };
   if (interaction.replied) {
     if (followUp) {
@@ -80,7 +90,7 @@ export const sendLongMessage = (interaction, message) => {
 
 /**
  *
- * @param {*} code
+ * @param {String} code
  * @returns {Object} response, responseCode
  */
 export const executeEval = async (client, code) => {

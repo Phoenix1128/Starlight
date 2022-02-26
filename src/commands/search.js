@@ -2,8 +2,7 @@ import {
   MessageEmbed, MessageActionRow, MessageButton, MessageSelectMenu,
 } from 'discord.js';
 import client from '../client.js';
-import { arrowBack, arrowForward, redX } from '../emoji.js';
-import { sendCustomMsg } from '../utils.js';
+import { emoji, sendCustomMsg } from '../utils.js';
 
 export const data = {
   name: 'search',
@@ -26,7 +25,7 @@ export async function run(interaction) {
   const { items, metadata } = await client.NASA.searchImageLibrary(query);
 
   if (items.length === 0) {
-    return sendCustomMsg(interaction, 0, 'No Results!', 'That query returned no results! Please try again!');
+    return sendCustomMsg(interaction, 0, 'No Results!', 'That query returned no results! Please try searching for a different query!');
   }
 
   const mappedItems = items.map((v) => ({ name: v.data[0].title, value: v.data[0].description.length > 1024 ? `${v.data[0].description.slice(0, 1020)}...` : v.data[0].description }));
@@ -54,19 +53,19 @@ export async function run(interaction) {
       .addComponents([
         new MessageButton()
           .setLabel('Previous')
-          .setEmoji(arrowBack)
+          .setEmoji(emoji.arrowBack)
           .setCustomId('previous')
           .setStyle('PRIMARY')
           .setDisabled(currPage === 1),
         new MessageButton()
           .setLabel('Next')
-          .setEmoji(arrowForward)
+          .setEmoji(emoji.arrowForward)
           .setCustomId('next')
           .setStyle('PRIMARY')
           .setDisabled(currPage === totalPages),
         new MessageButton()
           .setLabel('End Search')
-          .setEmoji(redX)
+          .setEmoji(emoji.redX)
           .setCustomId('end')
           .setStyle('DANGER'),
       ]);
@@ -109,7 +108,7 @@ export async function run(interaction) {
         .addComponents([
           new MessageButton()
             .setLabel('Back')
-            .setEmoji(arrowBack)
+            .setEmoji(emoji.arrowBack)
             .setStyle('PRIMARY')
             .setCustomId('Back'),
         ]);
