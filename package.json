@@ -1,7 +1,7 @@
 {
   "name": "starlight",
-  "version": "1.0.2",
-  "description": "",
+  "version": "1.0.3",
+  "description": "The best bot for learning about the universe. View NASA's Astronomy Picture of the Day, search through NASA's Image and Video Library, and more!",
   "main": "index.js",
   "type": "module",
   "scripts": {
@@ -9,7 +9,7 @@
     "start": "node index.js"
   },
   "keywords": [],
-  "author": "",
+  "author": "Parker Dinsdale - GitHub: @Phoenix1128 - Discord: @Phoenix#0408",
   "license": "ISC",
   "devDependencies": {
     "eslint": "^8.6.0",
